@@ -15,9 +15,10 @@ steps:
       docker-compose#v3.1.0:
         run: tests
 
-  - wait
-  - label: run the plugin
-    command: "echo hello world"
-    plugins:
-      ${BUILDKITE_REPO}#${BUILDKITE_COMMIT}:
-        image: ubuntu:18.04
+  # TODO - add some actual test of the plugin against a CF API
+  # - wait
+  # - label: run the plugin
+  #   command: "echo hello world"
+  #   plugins:
+  #     ${BUILDKITE_REPO}#${BUILDKITE_COMMIT}:
+  #       image: ubuntu:18.04
