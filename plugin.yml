@@ -18,10 +18,13 @@ configuration:
       type: string
     space:
       type: string
+    appname:
+      type: string
     manifest_path:
       type: string
   required:
     - api
     - organization
     - space
+    - appname
   additionalProperties: false

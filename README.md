@@ -13,6 +13,7 @@ steps:
         username: drnic@starkandwayne.com
         organization: starkandwayne
         space: buildkite-plugin-tests
+        appname: buildkite-plugin-test
 ```
 
 The `username` argument is optional, if you provide `$CF_USERNAME` via an agent hook.
@@ -29,6 +30,7 @@ steps:
         password_env: CF_PASSWORD_DRNIC
         organization: starkandwayne
         space: buildkite-plugin-tests
+        appname: buildkite-plugin-test
 ```
 
 The `cf push` command will look for `-f manifest.yml` by default. Use `manifest_path` argument to explicitly declare the location of the manifest.
@@ -42,6 +44,7 @@ steps:
         username: drnic@starkandwayne.com
         organization: starkandwayne
         space: buildkite-plugin-tests
+        appname: buildkite-plugin-test
         manifest_path: cf/manifest.yml
 ```
 

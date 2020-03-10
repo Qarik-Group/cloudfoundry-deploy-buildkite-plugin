@@ -27,4 +27,5 @@ steps:
         username: drnic@starkandwayne.com
         organization: starkandwayne
         space: buildkite-plugin-tests
+        appname: buildkite-plugin-test
         manifest_path: cf/manifest.yml

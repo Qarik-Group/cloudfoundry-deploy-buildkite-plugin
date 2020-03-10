@@ -13,7 +13,7 @@ env | sort
     args+=("--skip-ssl-validation")
   }
 
-  echo "--- :cloudfoundry: Running cf api command:"
+  echo "--- :cloudfoundry: Running cf api"
   echo -ne '\033[90m$\033[0m cf api ' >&2
 
   # Print all the arguments, with a space after, properly shell quoted
@@ -39,7 +39,7 @@ env | sort
   #   export CF_PASSWORD="${!BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_PASSWORD_ENV}"
   # }
 
-  echo "--- :cloudfoundry: Running cf auth command:"
+  echo "--- :cloudfoundry: Running cf auth"
   echo -ne '\033[90m$\033[0m cf auth ' >&2
 
   # Print all the arguments, with a space after, properly shell quoted
@@ -55,7 +55,7 @@ env | sort
   args+=("-o" "${BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_ORGANIZATION}")
   args+=("-s" "${BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_SPACE}")
 
-  echo "--- :cloudfoundry: Running cf target command:"
+  echo "--- :cloudfoundry: Running cf target"
   echo -ne '\033[90m$\033[0m cf target ' >&2
 
   # Print all the arguments, with a space after, properly shell quoted
@@ -72,7 +72,7 @@ env | sort
     args+=("-f" "${BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_MANIFEST_PATH}")
   }
 
-  echo "--- :cloudfoundry: Running cf push command:"
+  echo "--- :cloudfoundry: Running cf push"
   echo -ne '\033[90m$\033[0m cf push ' >&2
 
   # Print all the arguments, with a space after, properly shell quoted
@@ -80,4 +80,30 @@ env | sort
   echo
 
   cf push "${args[@]}"
+)
+
+(
+  args=()
+
+  app_guid="$(cf app "$BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_APPNAME" --guid)"
+  args+=("/v3/apps/${app_guid}" "-X" "PATCH" "-d")
+
+  commit_sha="$(git rev-parse --short HEAD)"
+  origin_url="$(git config remote.origin.url)"
+
+  annotation_json='{}'
+  annotation_json=$(jq -rc --arg annotation "git-commit" --arg value "$commit_sha" '.[$annotation] = $value' <<< "$annotation_json")
+  annotation_json=$(jq -rc --arg annotation "git-origin-url" --arg value "$origin_url" '.[$annotation] = $value' <<< "$annotation_json")
+
+  patch_json=$(jq -rc '{"metadata": {"annotations": .}}' <<< "$annotation_json")
+  args+=("$patch_json")
+
+  echo "--- :cloudfoundry: Setting annotations"
+  echo -ne '\033[90m$\033[0m cf curl ' >&2
+
+  # Print all the arguments, with a space after, properly shell quoted
+  printf "%q " "${args[@]}"
+  echo
+  cf curl "${args[@]}"
+
 )
