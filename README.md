@@ -26,7 +26,7 @@ steps:
     concurrency: 1
     concurrency_group: "cf-push"
     plugins:
-      starkandwayne/cloudfoundry-deploy#HEAD:
+      starkandwayne/cloudfoundry-deploy#v0.5.0:
         api: https://api.run.pivotal.io
         username: drnic@starkandwayne.com
         organization: starkandwayne
@@ -42,7 +42,7 @@ You can provide the password via `$CF_PASSWORD` from an agent hook. If you provi
 steps:
   - label: ":cloudfoundry:"
     plugins:
-      starkandwayne/cloudfoundry-deploy#HEAD:
+      starkandwayne/cloudfoundry-deploy#v0.5.0:
         api: https://api.run.pivotal.io
         username: drnic@starkandwayne.com
         password_env: CF_PASSWORD_DRNIC
@@ -57,7 +57,7 @@ The `cf push` command will look for `-f manifest.yml` by default. Use `manifest_
 steps:
   - label: ":cloudfoundry:"
     plugins:
-      starkandwayne/cloudfoundry-deploy#HEAD:
+      starkandwayne/cloudfoundry-deploy#v0.5.0:
         api: https://api.run.pivotal.io
         username: drnic@starkandwayne.com
         organization: starkandwayne
