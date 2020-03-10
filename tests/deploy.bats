@@ -8,7 +8,7 @@ setup() {
 
 @test "cf push from env vars" {
   stub cf "api https://api.mycf.com : echo cf api"
-  # stub cf "auth : echo cf auth"
+  stub cf "auth : echo cf auth"
   # stub cf "target : echo cf target"
   # stub cf "push : echo cf push"
 

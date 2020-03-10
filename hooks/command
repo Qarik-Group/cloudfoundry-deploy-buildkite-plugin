@@ -23,7 +23,26 @@ env
   cf api "${args[@]}"
 )
 
-# echo "--- :cloudfoundry: Targeting"
+(
+  args=()
+
+  [[ -n "${BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_USERNAME:-}" ]] && {
+    args+=("${BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_USERNAME}")
+  }
+
+  # [[ -n "${BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_PASSWORD_ENV:-}" ]] && {
+  #   export CF_PASSWORD="${!BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_PASSWORD_ENV}"
+  # }
+
+  echo "--- :cloudfoundry: Running cf auth command:"
+  echo -ne '\033[90m$\033[0m cf auth ' >&2
+
+  # Print all the arguments, with a space after, properly shell quoted
+  printf "%q " "${args[@]}"
+  echo
+
+  cf auth "${args[@]}"
+)
 
 # echo "--- :cloudfoundry: Pushing"
 # push_args=()
