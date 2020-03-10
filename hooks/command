@@ -65,11 +65,19 @@ env | sort
   cf target "${args[@]}"
 )
 
-# echo "--- :cloudfoundry: Pushing"
-# push_args=()
+(
+  args=()
 
-# [[ -n "${BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_MANIFEST_PATH:-}" ]] && {
-#   push_args+=("-f" "${BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_MANIFEST_PATH}")
-# }
+  [[ -n "${BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_MANIFEST_PATH:-}" ]] && {
+    args+=("-f" "${BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_MANIFEST_PATH}")
+  }
 
-# cf push "${push_args[@]}"
+  echo "--- :cloudfoundry: Running cf push command:"
+  echo -ne '\033[90m$\033[0m cf push ' >&2
+
+  # Print all the arguments, with a space after, properly shell quoted
+  printf "%q " "${args[@]}"
+  echo
+
+  cf push "${args[@]}"
+)
