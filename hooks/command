@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-env
+env | sort
 
 (
   # cf api
@@ -26,9 +26,14 @@ env
 (
   args=()
 
-  [[ -n "${BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_USERNAME:-}" ]] && {
+  if [[ -n "${BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_USERNAME:-}" ]]; then
     args+=("${BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_USERNAME}")
-  }
+  else
+    if [[ -z "${CF_USERNAME:-}" ]]; then
+      echo "ERROR: must provide \$CF_USERNAME or 'username' property"
+      exit 1
+    fi
+  fi
 
   # [[ -n "${BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_PASSWORD_ENV:-}" ]] && {
   #   export CF_PASSWORD="${!BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_PASSWORD_ENV}"
