@@ -1,0 +1,10 @@
+applications:
+  - name: staging
+    memory: 32M
+    instances: 1
+    buildpacks:
+      - staticfile_buildpack
+    stack: cflinuxfs3
+    path: .
+    routes:
+      - route: buildkite-plugin-tests.cfapps.io

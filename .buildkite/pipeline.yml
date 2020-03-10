@@ -1,8 +1,13 @@
 steps:
-  - label: ":shell: Shellcheck"
-    plugins:
-      shellcheck#v1.1.2:
-        files: hooks/**
+  # - label: ":shell: Shellcheck"
+  #   plugins:
+  #     shellcheck#v1.1.2:
+  #       files: hooks/**
+
+  # - label: ":docker: :hammer:"
+  #   plugins:
+  #     docker-compose#v3.1.0:
+  #       run: tests
 
   # TODO - what's this test step?
   # - label: ":sparkles:"
@@ -10,15 +15,14 @@ steps:
   #     plugin-linter#v2.0.0:
   #       id: cf
 
-  - label: ":docker: :hammer:"
-    plugins:
-      docker-compose#v3.1.0:
-        run: tests
+  - wait
 
-  # TODO - add some actual test of the plugin against a CF API
-  # - wait
-  # - label: run the plugin
-  #   command: "echo hello world"
-  #   plugins:
-  #     ${BUILDKITE_REPO}#${BUILDKITE_COMMIT}:
-  #       image: ubuntu:18.04
+  - label: ":cloudfoundry:"
+    command: "echo hello world"
+    plugins:
+      ${BUILDKITE_REPO}#${BUILDKITE_COMMIT}:
+        api: https://api.run.pivotal.io
+        username: drnic@starkandwayne.com
+        organization: starkandwayne
+        space: buildkite-plugin-tests
+        manifest_path: cf/manifest.yml

@@ -1,6 +1,8 @@
 #!/bin/bash
+
 set -euo pipefail
 
+env
 
 echo "--- :cloudfoundry: Deploying"
 cf push -f manifest.yml
