@@ -22,7 +22,6 @@ configuration:
       type: string
   required:
     - api
-    - username
     - organization
     - space
   additionalProperties: false

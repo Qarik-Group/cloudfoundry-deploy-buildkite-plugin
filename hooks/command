@@ -49,6 +49,22 @@ env | sort
   cf auth "${args[@]}"
 )
 
+(
+  args=()
+
+  args+=("-o" "${BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_ORGANIZATION}")
+  args+=("-s" "${BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_SPACE}")
+
+  echo "--- :cloudfoundry: Running cf target command:"
+  echo -ne '\033[90m$\033[0m cf target ' >&2
+
+  # Print all the arguments, with a space after, properly shell quoted
+  printf "%q " "${args[@]}"
+  echo
+
+  cf target "${args[@]}"
+)
+
 # echo "--- :cloudfoundry: Pushing"
 # push_args=()
 
