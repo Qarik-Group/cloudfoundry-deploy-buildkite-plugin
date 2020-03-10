@@ -8,6 +8,8 @@ configuration:
   properties:
     api:
       type: string
+    skip-ssl-validation:
+      type: bool
     username:
       type: string
     password_env:

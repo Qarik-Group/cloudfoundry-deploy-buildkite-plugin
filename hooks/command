@@ -4,5 +4,32 @@ set -euo pipefail
 
 env
 
-echo "--- :cloudfoundry: Deploying"
-cf push -f manifest.yml
+(
+  # cf api
+  args=()
+  args+=("$BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_API")
+
+  [[ -n "${BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_SKIP_SSL_VALIDATION:-}" ]] && {
+    args+=("--skip-ssl-validation")
+  }
+
+  echo "--- :cloudfoundry: Running cf api command:"
+  echo -ne '\033[90m$\033[0m cf api ' >&2
+
+  # Print all the arguments, with a space after, properly shell quoted
+  printf "%q " "${args[@]}"
+  echo
+
+  cf api "${args[@]}"
+)
+
+# echo "--- :cloudfoundry: Targeting"
+
+# echo "--- :cloudfoundry: Pushing"
+# push_args=()
+
+# [[ -n "${BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_MANIFEST_PATH:-}" ]] && {
+#   push_args+=("-f" "${BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_MANIFEST_PATH}")
+# }
+
+# cf push "${push_args[@]}"
