@@ -1,0 +1,26 @@
+name: "Cloud Foundry Deploy"
+description: Deploys your application to Cloud Foundry
+author: https://github.com/starkandwayne
+requirements:
+  - bash
+  - cf
+configuration:
+  properties:
+    api:
+      type: string
+    username:
+      type: string
+    password_env:
+      type: string
+    organization:
+      type: string
+    space:
+      type: string
+    manifest_path:
+      type: string
+  required:
+    - api
+    - username
+    - organization
+    - space
+  additionalProperties: false

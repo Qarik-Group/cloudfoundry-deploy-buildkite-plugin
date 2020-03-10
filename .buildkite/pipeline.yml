@@ -1,0 +1,22 @@
+steps:
+  - label: ":shell: Shellcheck"
+    plugins:
+      shellcheck#v1.1.2:
+        files: hooks/**
+
+  - label: ":sparkles:"
+    plugins:
+      plugin-linter#v2.0.0:
+        id: docker
+
+  - label: ":docker: :hammer:"
+    plugins:
+      docker-compose#v3.1.0:
+        run: tests
+
+  - wait
+  - label: run the plugin
+    command: "echo hello world"
+    plugins:
+      ${BUILDKITE_REPO}#${BUILDKITE_COMMIT}:
+        image: ubuntu:18.04
