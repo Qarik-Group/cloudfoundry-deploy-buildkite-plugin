@@ -82,14 +82,14 @@ CF_APPNAME_VENERABLE="${CF_APPNAME}-venerable"
 
       if cf app "$CF_APPNAME_VENERABLE" 2>/dev/null >/dev/null ; then
         echo "--> Found app $CF_APPNAME_VENERABLE; deleting it."
-        ( set -x ; cf delete "$CF_APPNAME_VENERABLE" -f )
+        cf delete "$CF_APPNAME_VENERABLE" -f
       fi
 
-      ( set -x ; cf rename "$CF_APPNAME" "$CF_APPNAME_VENERABLE" )
+      cf rename "$CF_APPNAME" "$CF_APPNAME_VENERABLE"
     else
       echo "--> App $CF_APPNAME #0 instance state '$container0_status', deleting it"
 
-      ( set -x ; cf delete "$CF_APPNAME" -f )
+      cf delete "$CF_APPNAME" -f
     fi
   else
     echo "--> App $CF_APPNAME does not exist, nothing to do."
@@ -156,7 +156,7 @@ app_url="/v3/apps/${app_guid}"
 
       if cf app "$CF_APPNAME_VENERABLE" 2>/dev/null >/dev/null ; then
         echo "--> Found app $CF_APPNAME_VENERABLE; deleting it."
-        ( set -x ; cf delete "$CF_APPNAME_VENERABLE" -f )
+        cf delete "$CF_APPNAME_VENERABLE" -f
       fi
     fi
   fi
