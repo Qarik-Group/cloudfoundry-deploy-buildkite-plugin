@@ -96,8 +96,8 @@ env | sort
   annotation_json=$(jq -rc --arg annotation "git-origin-url"   --arg value "$origin_url" '.[$annotation] = $value' <<< "$annotation_json")
   annotation_json=$(jq -rc --arg annotation "buildkite-job-id" --arg value "$BUILDKITE_JOB_ID" '.[$annotation] = $value' <<< "$annotation_json")
 
-  [[ -n "${BUILDKITE_PIPELINE_NAME:-}" ]] && {
-    buildkite_url="https://buildkite.com/$BUILDKITE_PIPELINE_NAME/builds/$BUILDKITE_BUILD_NUMBER#$BUILDKITE_BUILD_ID"
+  [[ -n "${BUILDKITE_PROJECT_SLUG:-}" ]] && {
+    buildkite_url="https://buildkite.com/$BUILDKITE_PROJECT_SLUG/builds/$BUILDKITE_BUILD_NUMBER#$BUILDKITE_BUILD_ID"
     annotation_json=$(jq -rc --arg annotation "buildkite-url"    --arg value "$buildkite_url" '.[$annotation] = $value' <<< "$annotation_json")
   }
 

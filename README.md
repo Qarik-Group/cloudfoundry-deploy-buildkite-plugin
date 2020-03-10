@@ -6,7 +6,9 @@ Sample usage with minimum required arguments:
 
 ```yaml
 steps:
-  - label: ":cloudfoundry:"
+  - label: ":cloudfoundry: deploy"
+    concurrency: 1
+    concurrency_group: "cf-push"
     plugins:
       starkandwayne/cloudfoundry-deploy#HEAD:
         api: https://api.run.pivotal.io

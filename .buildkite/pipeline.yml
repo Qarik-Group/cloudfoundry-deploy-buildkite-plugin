@@ -18,9 +18,11 @@ steps:
 
   - wait
 
-  - label: ":cloudfoundry:"
+  - label: ":cloudfoundry: deploy"
     agents:
       cf-cli: true
+    concurrency: 1
+    concurrency_group: "cf-push"
     plugins:
       ${BUILDKITE_REPO}#${BUILDKITE_COMMIT}:
         api: https://api.run.pivotal.io
