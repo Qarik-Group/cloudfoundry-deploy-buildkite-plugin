@@ -1,5 +1,5 @@
 applications:
-  - name: staging
+  - name: buildkite-plugin-test
     memory: 32M
     instances: 1
     buildpacks:
