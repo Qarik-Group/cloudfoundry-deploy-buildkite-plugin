@@ -68,6 +68,8 @@ steps:
         manifest_path: cf/manifest.yml
 ```
 
+If you do not want zero downtime deployment, or want a faster deployment (again, without zero downtime deployment), then you can use `skip-zero-downtime: true` to disable it.
+
 ## Testing
 
 Test plugin using [buildkite-plugin-tester](https://github.com/buildkite-plugins/buildkite-plugin-tester):

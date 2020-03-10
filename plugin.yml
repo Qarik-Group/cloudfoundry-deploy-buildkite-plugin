@@ -22,6 +22,8 @@ configuration:
       type: string
     manifest_path:
       type: string
+    skip-zero-downtime:
+      type: bool
   required:
     - api
     - organization

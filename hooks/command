@@ -68,10 +68,8 @@ CF_APPNAME_VENERABLE="${CF_APPNAME}-venerable"
   cf target "${args[@]}"
 )
 
+[[ -z "${BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_SKIP_ZERO_DOWNTIME:-}" ]] && {
 (
-  args=()
-
-
   echo "--- :cloudfoundry: Renaming app $CF_APPNAME -> $CF_APPNAME_VENERABLE (if necessary)"
   if cf app "$CF_APPNAME" 2>/dev/null >/dev/null ; then
     echo "--> Found app $CF_APPNAME"
@@ -95,6 +93,7 @@ CF_APPNAME_VENERABLE="${CF_APPNAME}-venerable"
     echo "--> App $CF_APPNAME does not exist, nothing to do."
   fi
 )
+}
 
 (
   args=()
@@ -145,6 +144,7 @@ app_url="/v3/apps/${app_guid}"
 
 )
 
+[[ -z "${BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_SKIP_ZERO_DOWNTIME:-}" ]] && {
 (
   echo "--- :cloudfoundry: Clean up venerable app"
   if cf app "$CF_APPNAME" 2>/dev/null >/dev/null ; then
@@ -161,6 +161,7 @@ app_url="/v3/apps/${app_guid}"
     fi
   fi
 )
+}
 
 (
   echo "--- :cloudfoundry: Annotations"
