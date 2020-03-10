@@ -94,7 +94,6 @@ env | sort
   annotation_json='{}'
   annotation_json=$(jq -rc --arg annotation "git-commit"       --arg value "$commit_sha" '.[$annotation] = $value' <<< "$annotation_json")
   annotation_json=$(jq -rc --arg annotation "git-origin-url"   --arg value "$origin_url" '.[$annotation] = $value' <<< "$annotation_json")
-  annotation_json=$(jq -rc --arg annotation "buildkite-job-id" --arg value "$BUILDKITE_JOB_ID" '.[$annotation] = $value' <<< "$annotation_json")
 
   [[ -n "${BUILDKITE_PROJECT_SLUG:-}" ]] && {
     buildkite_url="https://buildkite.com/$BUILDKITE_PROJECT_SLUG/builds/$BUILDKITE_BUILD_NUMBER#$BUILDKITE_BUILD_ID"
@@ -112,4 +111,6 @@ env | sort
   echo
   cf curl "${args[@]}"
 
+  echo "--- :cloudfoundry: Annotations"
+  cf curl "/v3/apps/${app_guid}" | jq -r ".metadata"
 )

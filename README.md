@@ -1,5 +1,21 @@
 # Buildkite Plugin to Deploy to Cloud Foundry
 
+This Buildkite Plugin will deploy an application contained within your repository to any Cloud Foundry with zero down time deployment.
+
+The plugin will also annotate the deployment with references to the Git commit, the Git repo URL and the Buildkite URL that performed the deployment.
+
+```json
+$ cf curl /v3/apps/<GUID> | jq -r ".metadata"
+{
+  "labels": {},
+  "annotations": {
+      "git-commit": "cbb2295",
+      "git-origin-url": "https://github.com/starkandwayne/cloudfoundry-deploy-buildkite-plugin.git",
+      "buildkite-url": "https://buildkite.com/starkandwayne/starkandwayne-cloudfoundry-deploy-buildkite-plugin/builds/10#25c29a97-a498-418b-bab2-2fcbdf088137"
+  }
+}
+```
+
 ## Usage
 
 Sample usage with minimum required arguments:
