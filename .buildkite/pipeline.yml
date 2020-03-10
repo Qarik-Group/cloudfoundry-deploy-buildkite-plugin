@@ -4,10 +4,11 @@ steps:
       shellcheck#v1.1.2:
         files: hooks/**
 
-  - label: ":sparkles:"
-    plugins:
-      plugin-linter#v2.0.0:
-        id: docker
+  # TODO - what's this test step?
+  # - label: ":sparkles:"
+  #   plugins:
+  #     plugin-linter#v2.0.0:
+  #       id: cf
 
   - label: ":docker: :hammer:"
     plugins:
