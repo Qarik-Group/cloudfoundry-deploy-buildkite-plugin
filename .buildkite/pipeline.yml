@@ -1,8 +1,8 @@
 steps:
-  - label: ":shell: Shellcheck"
-    plugins:
-      shellcheck#v1.1.2:
-        files: hooks/**
+  # - label: ":shell: Shellcheck"
+  #   plugins:
+  #     shellcheck#v1.1.2:
+  #       files: hooks/**
 
   # TODO - blocked on need to stub 'cf' multiple times
   # - label: ":docker: :hammer:"

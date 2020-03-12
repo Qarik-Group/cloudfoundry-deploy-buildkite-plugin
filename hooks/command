@@ -10,6 +10,18 @@ CF_APPNAME_VENERABLE="${CF_APPNAME}-venerable"
 export CF_HOME=$PWD/tmp/home
 mkdir -p "$CF_HOME"
 
+# From https://buildkite.com/docs/pipelines/links-and-images-in-log-output#links
+function inline_link_v2 {
+  LINK=$(printf "url='%s'" "$1")
+
+  if [ $# -gt 1 ]; then
+    LINK=$(printf "$LINK;content='%s'" "$2")
+  fi
+
+  # printf '%s' "$LINK"
+  printf '\033]1339;%s\a\n' "$LINK"
+}
+
 (
   # cf api
   args=()
@@ -175,4 +187,10 @@ app_url="/v3/apps/${app_guid}"
 (
   echo "--- :cloudfoundry: Annotations"
   cf curl "/v3/apps/${app_guid}" | jq -r ".metadata"
+)
+
+DEPLOYED_URL=https://$(cf curl "/v3/apps/${app_guid}/routes" | jq -r ".resources[0].url")
+export DEPLOYED_URL
+(
+  echo "--- :cloudfoundry: Deployed to $(inline_link_v2 "$DEPLOYED_URL")"
 )
