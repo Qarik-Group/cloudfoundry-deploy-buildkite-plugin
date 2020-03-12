@@ -70,11 +70,26 @@ steps:
 
 If you do not want zero downtime deployment, or want a faster deployment (again, without zero downtime deployment), then you can use `skip-zero-downtime: true` to disable it.
 
+You can pass variables to your `manifest.yml` using the `vars` parameter. The value will be passed as `cf push --vars-file [vars contents]`. Note, the value of `vars` is a multi-line strong.
+
+```yaml
+steps:
+  - label: ":cloudfoundry:"
+    plugins:
+      starkandwayne/cloudfoundry-deploy#v0.6.1:
+        api: https://api.run.pivotal.io
+        ...
+        manifest_path: cf/manifest.yml
+        vars: |
+          some-var: 123
+          build-number: $BUILDKITE_BUILD_NUMBER
+```
+
 ## Testing
 
 Test plugin using [buildkite-plugin-tester](https://github.com/buildkite-plugins/buildkite-plugin-tester):
 
-```
+```plain
 docker run -v $(pwd):/plugin buildkite/plugin-tester:latest bats /plugin/tests
 
 # or

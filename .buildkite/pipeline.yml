@@ -31,3 +31,5 @@ steps:
         space: buildkite-plugin-tests
         appname: buildkite-plugin-test
         manifest_path: cf/manifest.yml
+        vars: |
+          build-number: $BUILDKITE_BUILD_NUMBER

@@ -7,4 +7,4 @@ applications:
     stack: cflinuxfs3
     path: .
     routes:
-      - route: buildkite-plugin-tests.cfapps.io
+      - route: buildkite-plugin-tests-((build-number)).cfapps.io

@@ -105,6 +105,12 @@ mkdir -p "$CF_HOME"
     args+=("-f" "${BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_MANIFEST_PATH}")
   }
 
+  [[ -n "${BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_VARS:-}" ]] && {
+    vars_yml=$(mktemp -t "vars.yml")
+    echo "${BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_VARS}" > "$vars_yml"
+    args+=("--vars-file" "${vars_yml}")
+  }
+
   echo "--- :cloudfoundry: Running cf push"
   echo -ne '\033[90m$\033[0m cf push ' >&2
 
