@@ -33,3 +33,8 @@ steps:
         manifest_path: cf/manifest.yml
         vars: |
           build-number: $BUILDKITE_BUILD_NUMBER
+        labels: |
+          plugin-author: starkandwayne
+        annotations: |
+          starkandwayne.com/survivalfood/cake: true
+          starkandwayne.com/survivalfood/bacon: true
