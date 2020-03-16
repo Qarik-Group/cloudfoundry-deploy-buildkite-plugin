@@ -212,9 +212,7 @@ app_url="/v3/apps/${app_guid}"
 DEPLOYED_URL=https://$(cf curl "/v3/apps/${app_guid}/routes" | jq -r ".resources[0].url")
 export DEPLOYED_URL
 (
-  cat <<EOF | buildkite-agent annotate --style info
-Deployed to $DEPLOYED_URL.
-
+  cat <<EOF | buildkite-agent annotate --context cf-app-status
 Initial status of application:
 
 \`\`\`plain
@@ -226,5 +224,9 @@ Labels and annotations added to application:
 \`\`\`json
 $(cf curl "/v3/apps/${app_guid}" | jq -r ".metadata")
 \`\`\`
+EOF
+
+  cat <<EOF | buildkite-agent annotate --style info --context cf-app-url
+Deployed to $DEPLOYED_URL.
 EOF
 )
