@@ -10,6 +10,9 @@ env | sort
 CF_APPNAME=$BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_APPNAME
 CF_APPNAME_VENERABLE="${CF_APPNAME}-venerable"
 
+[[ -n "${BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_PASSWORD_ENV:-}" ]] && {
+  export CF_PASSWORD="${!BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_PASSWORD_ENV:?required}"
+}
 : "${CF_PASSWORD:?required for 'cf auth'}"
 
 # From https://buildkite.com/docs/pipelines/links-and-images-in-log-output#links
@@ -74,10 +77,6 @@ trap buildkite_agent_docker_cleanup ERR EXIT SIGQUIT
       exit 1
     fi
   fi
-
-  # [[ -n "${BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_PASSWORD_ENV:-}" ]] && {
-  #   export CF_PASSWORD="${!BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_PASSWORD_ENV}"
-  # }
 
   echo "--- :cloudfoundry: Running cf auth"
   echo -ne '\033[90m$\033[0m cf auth ' >&2
