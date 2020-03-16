@@ -215,6 +215,12 @@ export DEPLOYED_URL
   cat <<EOF | buildkite-agent annotate --style info
 Deployed to $DEPLOYED_URL.
 
+Initial status of application:
+
+\`\`\`plain
+$(cf app "$CF_APPNAME")
+\`\`\`
+
 Labels and annotations added to application:
 
 \`\`\`json
