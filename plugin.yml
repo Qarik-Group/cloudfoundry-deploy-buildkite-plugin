@@ -2,8 +2,7 @@ name: "Cloud Foundry Deploy"
 description: Deploys your application to Cloud Foundry
 author: https://github.com/starkandwayne
 requirements:
-  - bash
-  - cf
+  - docker
 configuration:
   properties:
     api:

@@ -41,6 +41,19 @@ function inline_link_v2 {
   printf '\033]1339;%s\a\n' "$LINK"
 }
 
+function docker_run {
+(
+  docker container run \
+    -v "$PWD:/workspace" \
+    -e CF_HOME=/workspace/tmp/home \
+    -e CF_PASSWORD \
+    --label "cloudfoundry-deploy-buildkite-plugin-version=$plugin_version" \
+    --workdir /workspace \
+    "${DOCKER_RUN:-starkandwayne/cloudfoundry-deploy-buildkite-plugin}" \
+    "$@"
+)
+}
+
 (
   # cf api
   args=()
@@ -57,7 +70,7 @@ function inline_link_v2 {
   printf "%q " "${args[@]}"
   echo
 
-  cf api "${args[@]}"
+  docker_run cf api "${args[@]}"
 )
 
 (
@@ -83,7 +96,7 @@ function inline_link_v2 {
   printf "%q " "${args[@]}"
   echo
 
-  cf auth "${args[@]}"
+  docker_run cf auth "${args[@]}"
 )
 
 (
@@ -99,29 +112,29 @@ function inline_link_v2 {
   printf "%q " "${args[@]}"
   echo
 
-  cf target "${args[@]}"
+  docker_run cf target "${args[@]}"
 )
 
 [[ -z "${BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_SKIP_ZERO_DOWNTIME:-}" ]] && {
 (
   echo "--- :cloudfoundry: Renaming app $CF_APPNAME -> $CF_APPNAME_VENERABLE (if necessary)"
-  if cf app "$CF_APPNAME" 2>/dev/null >/dev/null ; then
+  if docker_run cf app "$CF_APPNAME" 2>/dev/null >/dev/null ; then
     echo "--> Found app $CF_APPNAME"
 
-    container0_status=$(cf app "$CF_APPNAME" 2>/dev/null | grep "^#0" | awk '{print $2}')
+    container0_status=$(docker_run cf app "$CF_APPNAME" 2>/dev/null | grep "^#0" | awk '{print $2}')
     if [[ "${container0_status:-unknown}" == "running" ]]; then
       echo "--> Confirmed app $CF_APPNAME #0 instance 'running'"
 
-      if cf app "$CF_APPNAME_VENERABLE" 2>/dev/null >/dev/null ; then
+      if docker_run cf app "$CF_APPNAME_VENERABLE" 2>/dev/null >/dev/null ; then
         echo "--> Found app $CF_APPNAME_VENERABLE; deleting it."
-        cf delete "$CF_APPNAME_VENERABLE" -f
+        docker_run cf delete "$CF_APPNAME_VENERABLE" -f
       fi
 
       cf rename "$CF_APPNAME" "$CF_APPNAME_VENERABLE"
     else
       echo "--> App $CF_APPNAME #0 instance state '$container0_status', deleting it"
 
-      cf delete "$CF_APPNAME" -f
+      docker_run cf delete "$CF_APPNAME" -f
     fi
   else
     echo "--> App $CF_APPNAME does not exist, nothing to do."
@@ -137,9 +150,9 @@ function inline_link_v2 {
   }
 
   [[ -n "${BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_VARS:-}" ]] && {
-    vars_yml=$(mktemp -t "vars.yml")
+    vars_yml=tmp/vars.yml
     echo "${BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_VARS}" > "$vars_yml"
-    args+=("--vars-file" "${vars_yml}")
+    args+=("--vars-file" tmp/vars.yml)
   }
 
   echo "--- :cloudfoundry: Running cf push"
@@ -149,15 +162,15 @@ function inline_link_v2 {
   printf "%q " "${args[@]}"
   echo
 
-  cf push "${args[@]}"
+  docker_run cf push "${args[@]}"
 )
 
-app_guid="$(cf app "$BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_APPNAME" --guid)"
-app_url="/v3/apps/${app_guid}"
+app_guid="$(docker_run cf app "$BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_APPNAME" --guid)"
 
 (
   args=()
-  args+=("$app_url" "-X" "PATCH" "-d")
+  args+=("/v3/apps/${app_guid}" "-X" "PATCH" "-d")
+  echo "args" "${args[@]}"
 
   commit_sha="$(git rev-parse --short HEAD)"
   origin_url="$(git config remote.origin.url)"
@@ -171,7 +184,7 @@ app_url="/v3/apps/${app_guid}"
 
   [[ -n "${BUILDKITE_PROJECT_SLUG:-}" ]] && {
     buildkite_url="https://buildkite.com/$BUILDKITE_PROJECT_SLUG/builds/$BUILDKITE_BUILD_NUMBER#$BUILDKITE_BUILD_ID"
-    annotation_json=$(jq -rc --arg annotation "buildkite-url"    --arg value "$buildkite_url" '.[$annotation] = $value' <<< "$annotation_json")
+    annotation_json=$(jq -rc --arg annotation "buildkite-url" --arg value "$buildkite_url" '.[$annotation] = $value' <<< "$annotation_json")
   }
 
   patch_json=$(jq -src '.[0] * .[1]' \
@@ -186,43 +199,43 @@ app_url="/v3/apps/${app_guid}"
   # Print all the arguments, with a space after, properly shell quoted
   printf "%q " "${args[@]}"
   echo
-  cf curl "${args[@]}"
+  docker_run cf curl "${args[@]}"
 
 )
 
 [[ -z "${BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_SKIP_ZERO_DOWNTIME:-}" ]] && {
 (
   echo "--- :cloudfoundry: Clean up venerable app"
-  if cf app "$CF_APPNAME" 2>/dev/null >/dev/null ; then
+  if docker_run cf app "$CF_APPNAME" 2>/dev/null >/dev/null ; then
     echo "--> Confirmed found app $CF_APPNAME"
 
-    container0_status=$(cf app "$CF_APPNAME" 2>/dev/null | grep "^#0" | awk '{print $2}')
+    container0_status=$(docker_run cf app "$CF_APPNAME" 2>/dev/null | grep "^#0" | awk '{print $2}')
     if [[ "${container0_status:-unknown}" == "running" ]]; then
       echo "--> Confirmed #0 instance running"
 
       if cf app "$CF_APPNAME_VENERABLE" 2>/dev/null >/dev/null ; then
         echo "--> Found app $CF_APPNAME_VENERABLE; deleting it."
-        cf delete "$CF_APPNAME_VENERABLE" -f
+        docker_run cf delete "$CF_APPNAME_VENERABLE" -f
       fi
     fi
   fi
 )
 }
 
-DEPLOYED_URL=https://$(cf curl "/v3/apps/${app_guid}/routes" | jq -r ".resources[0].url")
+DEPLOYED_URL=https://$(docker_run cf curl "/v3/apps/${app_guid}/routes" | jq -r ".resources[0].url")
 export DEPLOYED_URL
 (
   cat <<EOF | buildkite-agent annotate --context cf-app-status
 Initial status of application:
 
 \`\`\`plain
-$(cf app "$CF_APPNAME")
+$(docker_run cf app "$CF_APPNAME")
 \`\`\`
 
 Labels and annotations added to application:
 
 \`\`\`json
-$(cf curl "/v3/apps/${app_guid}" | jq -r ".metadata")
+$(docker_run cf curl "/v3/apps/${app_guid}" | jq -r ".metadata")
 \`\`\`
 EOF
 

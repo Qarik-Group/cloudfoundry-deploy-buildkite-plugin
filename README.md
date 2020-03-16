@@ -8,6 +8,8 @@ The plugin will annotate the Buildkite build with the URL for the application, a
 
 ![annotations](https://p198.p4.n0.cdn.getcloudapp.com/items/v1urO4Dm/buildkite-cf-deploy-plugin-annotations.png?v=5ddf0b36153c564d146ade020db0abc9)
 
+The plugin requires the Docker Daemon and `docker` CLI to be available.
+
 ## Usage
 
 Sample usage with minimum required arguments:
