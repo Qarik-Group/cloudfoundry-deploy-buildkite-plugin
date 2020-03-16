@@ -217,5 +217,5 @@ app_url="/v3/apps/${app_guid}"
 DEPLOYED_URL=https://$(cf curl "/v3/apps/${app_guid}/routes" | jq -r ".resources[0].url")
 export DEPLOYED_URL
 (
-  echo "--- :cloudfoundry: Deployed to $(inline_link_v2 "$DEPLOYED_URL")"
+  buildkite-agent annotate "Deployed to $DEPLOYED_URL" --style info
 )
