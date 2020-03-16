@@ -9,11 +9,13 @@ The plugin will also annotate the deployment with references to the Git commit, 
 ```json
 $ cf curl /v3/apps/<GUID> | jq -r ".metadata"
 {
-  "labels": {},
+  "labels": {
+    "cloudfoundry-deploy-buildkite-plugin-version": "0.7.0"
+  },
   "annotations": {
-      "git-commit": "cbb2295",
-      "git-origin-url": "https://github.com/starkandwayne/cloudfoundry-deploy-buildkite-plugin.git",
-      "buildkite-url": "https://buildkite.com/starkandwayne/starkandwayne-cloudfoundry-deploy-buildkite-plugin/builds/10#25c29a97-a498-418b-bab2-2fcbdf088137"
+    "git-commit": "cbb2295",
+    "git-origin-url": "https://github.com/starkandwayne/cloudfoundry-deploy-buildkite-plugin.git",
+    "buildkite-url": "https://buildkite.com/starkandwayne/starkandwayne-cloudfoundry-deploy-buildkite-plugin/builds/10#25c29a97-a498-418b-bab2-2fcbdf088137"
   }
 }
 ```
@@ -83,6 +85,14 @@ steps:
         vars: |
           some-var: 123
           build-number: $BUILDKITE_BUILD_NUMBER
+```
+
+### Discover all Cloud Foundry applications deployed using plugin
+
+The `cloudfoundry-deploy-buildkite-plugin-version` label is added to all applications deployed using this plugin, so we can use [API label selectors](https://v3-apidocs.cloudfoundry.org/version/3.82.0/index.html#labels-and-selectors) to find them:
+
+```plain
+cf curl /v3/apps\?label_selector=cloudfoundry-deploy-buildkite-plugin-version
 ```
 
 ## Testing
