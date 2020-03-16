@@ -4,21 +4,9 @@ This Buildkite Plugin will deploy an application contained within your repositor
 
 ![deploy](docs/buildkite-cloudfoundry-deploy-output.png)
 
-The plugin will also annotate the deployment with references to the Git commit, the Git repo URL and the Buildkite URL that performed the deployment.
+The plugin will annotate the Buildkite build with the URL for the application, as well as any Cloud Foundry labels and annotations added.
 
-```json
-$ cf curl /v3/apps/<GUID> | jq -r ".metadata"
-{
-  "labels": {
-    "cloudfoundry-deploy-buildkite-plugin-version": "0.8.0"
-  },
-  "annotations": {
-    "git-commit": "cbb2295",
-    "git-origin-url": "https://github.com/starkandwayne/cloudfoundry-deploy-buildkite-plugin.git",
-    "buildkite-url": "https://buildkite.com/starkandwayne/starkandwayne-cloudfoundry-deploy-buildkite-plugin/builds/10#25c29a97-a498-418b-bab2-2fcbdf088137"
-  }
-}
-```
+![annotations](https://p198.p4.n0.cdn.getcloudapp.com/items/v1urO4Dm/buildkite-cf-deploy-plugin-annotations.png?v=5ddf0b36153c564d146ade020db0abc9)
 
 ## Usage
 
