@@ -13,6 +13,22 @@ CF_APPNAME_VENERABLE="${CF_APPNAME}-venerable"
 export CF_HOME=$PWD/tmp/home
 mkdir -p "$CF_HOME"
 
+export CF_BIN=$CF_HOME/bin
+mkdir -p "$CF_BIN"
+export PATH=$CF_BIN:$PATH
+
+(
+  [[ -x "$(command -v cf)" ]] || {
+    echo "--- :cloudfoundry: Downloading cf cli"
+    CF_CLI_VERSION=${CF_CLI_VERSION:-6.50.0}
+    curl -L "https://packages.cloudfoundry.org/stable?release=linux64-binary&version=${CF_CLI_VERSION}&source=github-rel" | tar -C "${CF_BIN}" -xvz cf
+  }
+  [[ -x "$(command -v jq)" ]] || {
+    echo "--- :json: Downloading jq cli"
+    curl -L https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 -o "${CF_BIN}/jq"
+  }
+)
+
 # From https://buildkite.com/docs/pipelines/links-and-images-in-log-output#links
 function inline_link_v2 {
   LINK=$(printf "url='%s'" "$1")
