@@ -19,8 +19,6 @@ steps:
   - wait
 
   - label: ":cloudfoundry: deploy"
-    agents:
-      cf-cli: true
     concurrency: 1
     concurrency_group: "cf-push"
     plugins:
