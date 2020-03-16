@@ -10,6 +10,8 @@ env | sort
 CF_APPNAME=$BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_APPNAME
 CF_APPNAME_VENERABLE="${CF_APPNAME}-venerable"
 
+: "${CF_PASSWORD:?required for 'cf auth'}"
+
 # From https://buildkite.com/docs/pipelines/links-and-images-in-log-output#links
 function inline_link_v2 {
   LINK=$(printf "url='%s'" "$1")
