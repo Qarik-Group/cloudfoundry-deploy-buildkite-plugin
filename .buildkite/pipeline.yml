@@ -22,6 +22,9 @@ steps:
     concurrency: 1
     concurrency_group: "cf-push"
     plugins:
+      seek-oss/aws-sm#v2.0.0:
+        env:
+          CF_PASSWORD: arn:aws:secretsmanager:us-east-1:868593321044:secret:pipelines/pws/drnic/cf-password-dUL5fd
       ${BUILDKITE_REPO}#${BUILDKITE_COMMIT}:
         api: https://api.run.pivotal.io
         username: drnic@starkandwayne.com
