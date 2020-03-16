@@ -36,16 +36,8 @@ function docker_run {
     --workdir /workspace \
     "${DOCKER_RUN:-starkandwayne/cloudfoundry-deploy-buildkite-plugin}" \
     "$@"
-
-  buildkite_agent_cleanup
 )
 }
-
-function buildkite_agent_cleanup {
-  chown -hR buildkite:buildkite "$PWD"
-}
-trap buildkite_agent_cleanup ERR EXIT SIGQUIT
-
 
 (
   # cf api
