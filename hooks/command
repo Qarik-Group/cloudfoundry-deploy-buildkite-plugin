@@ -39,6 +39,11 @@ function docker_run {
 )
 }
 
+function buildkite_agent_docker_cleanup {
+  docker_run rm -rf /workspace/tmp
+}
+trap buildkite_agent_docker_cleanup ERR EXIT SIGQUIT
+
 (
   # cf api
   args=()
@@ -155,7 +160,6 @@ app_guid="$(docker_run cf app "$BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_APPNAME" --
 (
   args=()
   args+=("/v3/apps/${app_guid}" "-X" "PATCH" "-d")
-  echo "args" "${args[@]}"
 
   commit_sha="$(git rev-parse --short HEAD)"
   origin_url="$(git config remote.origin.url)"
