@@ -121,7 +121,7 @@ trap enable_buildkite_agent_cleanup EXIT
         docker_run cf delete "$CF_APPNAME_VENERABLE" -f
       fi
 
-      cf rename "$CF_APPNAME" "$CF_APPNAME_VENERABLE"
+      docker_run cf rename "$CF_APPNAME" "$CF_APPNAME_VENERABLE"
     else
       echo "--> App $CF_APPNAME #0 instance state '$container0_status', deleting it"
 
