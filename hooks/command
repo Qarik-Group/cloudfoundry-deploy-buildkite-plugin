@@ -39,6 +39,12 @@ function docker_run {
 )
 }
 
+function enable_buildkite_agent_cleanup {
+  chown -hR buildkite:buildkite "$PWD"
+}
+trap enable_buildkite_agent_cleanup EXIT
+
+
 (
   # cf api
   args=()
