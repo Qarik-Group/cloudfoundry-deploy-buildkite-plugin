@@ -209,13 +209,16 @@ app_url="/v3/apps/${app_guid}"
 )
 }
 
-(
-  echo "--- :cloudfoundry: Annotations"
-  cf curl "/v3/apps/${app_guid}" | jq -r ".metadata"
-)
-
 DEPLOYED_URL=https://$(cf curl "/v3/apps/${app_guid}/routes" | jq -r ".resources[0].url")
 export DEPLOYED_URL
 (
-  buildkite-agent annotate "Deployed to $DEPLOYED_URL" --style info
+  cat <<EOF | buildkite-agent annotate --style info
+Deployed to $DEPLOYED_URL.
+
+Labels and annotations added to application:
+
+\`\`\`json
+$(cf curl "/v3/apps/${app_guid}" | jq -r ".metadata")
+\`\`\`
+EOF
 )
