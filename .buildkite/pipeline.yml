@@ -25,6 +25,7 @@ steps:
       ${BUILDKITE_REPO}#${BUILDKITE_COMMIT}:
         api: https://api.run.pivotal.io
         username: drnic@starkandwayne.com
+        password_env: PWS_CF_PASSWORD_DRNIC
         organization: starkandwayne
         space: buildkite-plugin-tests
         appname: buildkite-plugin-test
