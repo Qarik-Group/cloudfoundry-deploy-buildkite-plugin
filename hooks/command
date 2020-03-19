@@ -201,7 +201,7 @@ app_guid="$(docker_run cf app "$BUILDKITE_PLUGIN_CLOUDFOUNDRY_DEPLOY_APPNAME" --
     if [[ "${container0_status:-unknown}" == "running" ]]; then
       echo "--> Confirmed #0 instance running"
 
-      if cf app "$CF_APPNAME_VENERABLE" 2>/dev/null >/dev/null ; then
+      if docker_run cf app "$CF_APPNAME_VENERABLE" 2>/dev/null >/dev/null ; then
         echo "--> Found app $CF_APPNAME_VENERABLE; deleting it."
         docker_run cf delete "$CF_APPNAME_VENERABLE" -f
       fi
