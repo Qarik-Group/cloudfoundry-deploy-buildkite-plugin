@@ -45,7 +45,7 @@ function docker_run {
 function buildkite_agent_docker_cleanup {
   docker_run rm -rf /workspace/tmp
 }
-trap buildkite_agent_docker_cleanup ERR EXIT SIGQUIT
+trap buildkite_agent_docker_cleanup INT TERM ERR EXIT QUIT SIGQUIT
 
 (
   # cf api
